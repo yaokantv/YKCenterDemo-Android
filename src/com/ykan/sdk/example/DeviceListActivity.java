@@ -167,7 +167,8 @@ public class DeviceListActivity extends BaseActivity {
 				//已经绑定的设备才去解绑
 				if (mGizWifiDevice.isBind()) {
 					//解绑该设备
-					mDeviceManager.unbindDevice(mGizWifiDevice.getDid());			
+					mDeviceManager.unbindDevice(mGizWifiDevice.getDid());	
+					update(mDeviceManager.getCanUseGizWifiDevice());
 				}else {
 					toast("该设备未绑定");
 				}

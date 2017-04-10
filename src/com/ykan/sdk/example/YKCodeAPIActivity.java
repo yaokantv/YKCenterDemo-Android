@@ -215,6 +215,7 @@ public class YKCodeAPIActivity extends Activity implements View.OnClickListener 
 		switch (v.getId()) {
 		case R.id.wifitest:
 			//进入遥控控制面板
+			 Log.d(TAG, "remoteControl:" +remoteControl);
 			if(remoteControl == null){
 				Toast.makeText(getApplicationContext(), "没有下载遥控器数据", Toast.LENGTH_SHORT).show();
 				return;
@@ -268,7 +269,7 @@ public class YKCodeAPIActivity extends Activity implements View.OnClickListener 
 				break;
 			case R.id.getMatchedDataByBrand:
 				 if(currBrand != null){
-					 controlResult = ykanInterface.getRemoteMatched(currBrand.getBid(),currDeviceType.getTid(),1);
+					 controlResult = ykanInterface.getRemoteMatched(currBrand.getBid(),currDeviceType.getTid(),4);
 					 remoteControls = controlResult.getRs();
 					 result = controlResult.toString();
 					 message.what = 2 ;

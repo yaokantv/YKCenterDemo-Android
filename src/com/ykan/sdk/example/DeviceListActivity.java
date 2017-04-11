@@ -4,6 +4,7 @@ import java.util.List;
 import com.gizwits.gizwifisdk.api.GizWifiDevice;
 import com.gizwits.gizwifisdk.enumration.GizWifiErrorCode;
 import com.yaokan.sdk.utils.Logger;
+import com.yaokan.sdk.utils.Utility;
 import com.yaokan.sdk.wifi.DeviceManager;
 import com.yaokan.sdk.wifi.GizWifiCallBack;
 import android.content.Intent;
@@ -42,9 +43,13 @@ public class DeviceListActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent intent = new Intent(DeviceListActivity.this,YKCodeAPIActivity.class);
+				GizWifiDevice mGizWifiDevice =wifiDevices.get(position);
 				intent.putExtra("GizWifiDevice", wifiDevices.get(position));
-				//使用该设备之前之前先订阅
-				mDeviceManager.setSubscribed(wifiDevices.get(position));
+				//绑定
+			   if (!Utility.isEmpty(mGizWifiDevice)&&!mGizWifiDevice.isBind()) {
+				  mDeviceManager.bindRemoteDevice(mGizWifiDevice.getMacAddress());
+			   }
+
 				startActivity(intent);
 			}
 		});

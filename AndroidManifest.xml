@@ -43,7 +43,7 @@
           <activity android:name=".YKWifiConfigActivity" />
           <activity android:name=".YKWifiDeviceControlActivity" />
             <activity android:name=".DeviceListActivity" />
-          <meta-data android:name="yk_key" android:value="yk14876611858976"/>
+          <meta-data android:name="yk_key" android:value="yk"/>
           <!--yk_key需要向我公司申请 格式为：ykxxxxxx  -->
      </application>
 

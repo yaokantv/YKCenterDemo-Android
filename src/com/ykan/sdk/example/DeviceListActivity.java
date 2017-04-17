@@ -1,7 +1,9 @@
 package com.ykan.sdk.example;
+
 import java.util.ArrayList;
 import java.util.List;
 import com.gizwits.gizwifisdk.api.GizWifiDevice;
+import com.gizwits.gizwifisdk.enumration.GizWifiDeviceNetStatus;
 import com.gizwits.gizwifisdk.enumration.GizWifiErrorCode;
 import com.yaokan.sdk.utils.Logger;
 import com.yaokan.sdk.utils.Utility;
@@ -19,6 +21,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
 public class DeviceListActivity extends BaseActivity {
 	private String TAG = DeviceListActivity.class.getSimpleName();
 	private ListView lvDevice;
@@ -31,7 +34,8 @@ public class DeviceListActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.act_device_list);
-		mDeviceManager = DeviceManager.instanceDeviceManager(getApplicationContext());
+		mDeviceManager = DeviceManager
+				.instanceDeviceManager(getApplicationContext());
 		mDeviceManager.setGizWifiCallBack(mGizWifiCallBack);
 		initView();
 	}
@@ -41,14 +45,14 @@ public class DeviceListActivity extends BaseActivity {
 		lvDevice.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
 				Intent intent = new Intent(DeviceListActivity.this,YKCodeAPIActivity.class);
-				GizWifiDevice mGizWifiDevice =wifiDevices.get(position);
+				GizWifiDevice mGizWifiDevice = wifiDevices.get(position);
 				intent.putExtra("GizWifiDevice", wifiDevices.get(position));
-				//绑定
-			   if (!Utility.isEmpty(mGizWifiDevice)&&!mGizWifiDevice.isBind()) {
-				  mDeviceManager.bindRemoteDevice(mGizWifiDevice.getMacAddress());
-			   }
+				// 绑定
+				if (!Utility.isEmpty(mGizWifiDevice)&& !mGizWifiDevice.isBind()) {mDeviceManager.bindRemoteDevice(mGizWifiDevice.getMacAddress());
+				}
 
 				startActivity(intent);
 			}
@@ -56,9 +60,6 @@ public class DeviceListActivity extends BaseActivity {
 		adapter = new DeviceAdapter();
 		lvDevice.setAdapter(adapter);
 	}
-	
-	
-
 
 	@Override
 	protected void onResume() {
@@ -68,8 +69,11 @@ public class DeviceListActivity extends BaseActivity {
 
 	private GizWifiCallBack mGizWifiCallBack = new GizWifiCallBack() {
 		@Override
-		public void discoveredrCb(GizWifiErrorCode result, java.util.List<GizWifiDevice> deviceList) {
-			Logger.d(TAG, "discoveredrCb -> deviceList size:" + deviceList.size() + "  result:" + result);
+		public void discoveredrCb(GizWifiErrorCode result,
+				java.util.List<GizWifiDevice> deviceList) {
+			Logger.d(TAG,
+					"discoveredrCb -> deviceList size:" + deviceList.size()
+							+ "  result:" + result);
 			switch (result) {
 			case GIZ_SDK_SUCCESS:
 				Logger.e(TAG, "load device  sucess");
@@ -82,44 +86,61 @@ public class DeviceListActivity extends BaseActivity {
 
 		}
 	};
+
+	private String getBindInfo(boolean isBind) {
+		String strReturn = "";
+		if (isBind == true)
+			strReturn = "已绑定";
+		else
+			strReturn = "未绑定";
+		return strReturn;
+	}
+
+	private String getLANInfo(boolean isLAN) {
+		String strReturn = "";
+		if (isLAN == true)
+			strReturn = "局域网内设备";
+		else
+			strReturn = "远程设备";
+		return strReturn;
+	}
 	
 	
-	private String getBindInfo(boolean isBind){
-	String strReturn = "";
-	if( isBind==true ) strReturn = "已绑定";
-	else strReturn = "未绑定";
-	return strReturn;
-}
 	
+	private String getOnlineInfo(GizWifiDeviceNetStatus netStatus) {
+		String strReturn = "";
+		if (mDeviceManager.isOnline(netStatus) == true)//判断是否在线的方法
+			strReturn = "在线";
+		else
+			strReturn = "离线";
+		return strReturn;
+	}
 	
-	private String getLANInfo(boolean isLAN){
-	String strReturn = "";
-	if( isLAN==true ) strReturn = "局域网内设备";
-	else strReturn = "远程设备";
-	return strReturn;
-}
 
 	void update(List<GizWifiDevice> gizWifiDevices) {
-		if(gizWifiDevices==null){
+		if (gizWifiDevices == null) {
 			deviceNames.clear();
-		}else if(gizWifiDevices!=null&&gizWifiDevices.size()>=1){
+		} else if (gizWifiDevices != null && gizWifiDevices.size() >= 1) {
 			wifiDevices.clear();
 			wifiDevices.addAll(gizWifiDevices);
 			deviceNames.clear();
-			for(int i = 0 ; i < wifiDevices.size() ;i++){
-				deviceNames.add( wifiDevices.get(i).getProductName() + "(" + wifiDevices.get(i).getMacAddress() + ") "+getBindInfo( wifiDevices.get(i).isBind() ) +" "+ getLANInfo(wifiDevices.get(i).isLAN()) );
-				
+			for (int i = 0; i < wifiDevices.size(); i++) {
+				deviceNames.add(wifiDevices.get(i).getProductName() + "("
+						+ wifiDevices.get(i).getMacAddress() + ") "
+						+ getBindInfo(wifiDevices.get(i).isBind()) + "\n"
+						+ getLANInfo(wifiDevices.get(i).isLAN())+"  "+getOnlineInfo(wifiDevices.get(i).getNetStatus()));
 
 			}
 		}
-		
+
 		adapter.notifyDataSetChanged();
 	}
 
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.btn_link:
-			startActivity(new Intent(DeviceListActivity.this, YKWifiConfigActivity.class));
+			startActivity(new Intent(DeviceListActivity.this,
+					YKWifiConfigActivity.class));
 			break;
 		case R.id.btn_refresh:
 			update(mDeviceManager.getCanUseGizWifiDevice());
@@ -147,45 +168,45 @@ public class DeviceListActivity extends BaseActivity {
 		}
 
 		@Override
-		public View getView( int position, View convertView, ViewGroup parent) {
-			ViewHolder holder;  
-	        if (convertView == null) {  
-	            convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.lv_item,parent, false);  
-	            holder = new ViewHolder();  
-	            holder.name = (TextView) convertView  
-	                    .findViewById(R.id.tv_item);  
-	            holder.btn = (Button) convertView.findViewById(R.id.btn_item);
-	            convertView.setTag(holder);  
-	        } else {  
-	            holder = (ViewHolder) convertView.getTag();  
-	        }  
-	        	  
-	        holder.name.setText(deviceNames.get(position));  
-	        
-	        final int pos =position;
-	        holder.btn.setOnClickListener(new OnClickListener() {
-				
+		public View getView(int position, View convertView, ViewGroup parent) {
+			ViewHolder holder;
+			if (convertView == null) {
+				convertView = LayoutInflater.from(getApplicationContext())
+						.inflate(R.layout.lv_item, parent, false);
+				holder = new ViewHolder();
+				holder.name = (TextView) convertView.findViewById(R.id.tv_item);
+				holder.btn = (Button) convertView.findViewById(R.id.btn_item);
+				convertView.setTag(holder);
+			} else {
+				holder = (ViewHolder) convertView.getTag();
+			}
+
+			holder.name.setText(deviceNames.get(position));
+
+			final int pos = position;
+			holder.btn.setOnClickListener(new OnClickListener() {
+
 				@Override
 				public void onClick(View v) {
-					
-				GizWifiDevice mGizWifiDevice =wifiDevices.get(pos);
-				//已经绑定的设备才去解绑
-				if (mGizWifiDevice.isBind()) {
-					//解绑该设备
-					mDeviceManager.unbindDevice(mGizWifiDevice.getDid());	
-					update(mDeviceManager.getCanUseGizWifiDevice());
-				}else {
-					toast("该设备未绑定");
-				}
-					
-					
+
+					GizWifiDevice mGizWifiDevice = wifiDevices.get(pos);
+					// 已经绑定的设备才去解绑
+					if (mGizWifiDevice.isBind()) {
+						// 解绑该设备
+						mDeviceManager.unbindDevice(mGizWifiDevice.getDid());
+						update(mDeviceManager.getCanUseGizWifiDevice());
+					} else {
+						toast("该设备未绑定");
+					}
+
 				}
 			});
-	        return convertView;  
-	    }  
-		private class ViewHolder {  
-	        TextView name = null;  
-	        Button btn = null;  
-	    }  
+			return convertView;
+		}
+
+		private class ViewHolder {
+			TextView name = null;
+			Button btn = null;
+		}
 	}
 }

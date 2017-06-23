@@ -39,8 +39,7 @@ public class MainActivity extends BaseActivity {
 				Logger.d(TAG, "didUserLogin result:" + result + " uid:" + uid + " token:" + token);
 				dialogUtils.sendMessage(ProgressDialogUtils.DISMISS);
 				if (result == GizWifiErrorCode.GIZ_SDK_SUCCESS) {// 登陆成功
-					DeviceManager.instanceDeviceManager(getApplicationContext()).saveUserToken(uid, token);
-					toDeviceList();
+ 					toDeviceList();
 				} else if (result == GizWifiErrorCode.GIZ_OPENAPI_USER_NOT_EXIST) {// 用户不存在
 					toast(R.string.GIZ_OPENAPI_USER_NOT_EXIST);
 				} else if (result == GizWifiErrorCode.GIZ_OPENAPI_USERNAME_PASSWORD_ERROR) {//// 用户名或者密码错误

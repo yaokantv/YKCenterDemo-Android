@@ -116,7 +116,8 @@ public class YKWifiDeviceControlActivity extends Activity implements IDeviceCont
 					TextView keyTv = (TextView) view.findViewById(R.id.key_btn);			
 					keyTv.setTag("small_square");
 					animStudy.startAnim(keyTv);
-				    driverControl.startLearn();
+				
+				    driverControl.startLearn();	//开始学习。
 				    return true ;
 				}
 				
@@ -194,15 +195,15 @@ public class YKWifiDeviceControlActivity extends Activity implements IDeviceCont
 	public void didReceiveData(DeviceDataStatus dataStatus, String data) {
 		// TODO Auto-generated method stub
 		switch (dataStatus) {
-		case DATA_LEARNING_SUCCESS:
-			String studyValue = data;
+		case DATA_LEARNING_SUCCESS://学习成功
+			String studyValue = data;//data 表示学习接收到的数据
 			KeyCode keyCode = codeDatas.get(codeKeys.get(currLearning));
 			keyCode.setSrcCode(studyValue);
 			Logger.d(TAG, "学习成功:" + studyValue);
 			animStudy.stopAnim(1);
 			Toast.makeText(getApplicationContext(), "学习成功", Toast.LENGTH_SHORT).show();
 			break;
-		case DATA_LEARNING_FAILED:
+		case DATA_LEARNING_FAILED://学习失败
 			Logger.d(TAG, "学习失败");
 			animStudy.stopAnim(1);
 			Toast.makeText(getApplicationContext(), "学习失败", Toast.LENGTH_SHORT).show();

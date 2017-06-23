@@ -229,7 +229,7 @@ public class YKCodeAPIActivity extends Activity implements View.OnClickListener 
 				e.printStackTrace();
 			}
 			startActivity(intent);
-			break;
+			break;	
 		default:
 			new DownloadThread(v.getId()).start();
 			break;

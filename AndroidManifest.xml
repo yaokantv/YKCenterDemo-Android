@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="19" />
+        android:targetSdkVersion="22" />
 
    <!-- Required  一些系统要求的权限，如访问网络等 -->
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
@@ -43,7 +43,7 @@
           <activity android:name=".YKWifiConfigActivity" />
           <activity android:name=".YKWifiDeviceControlActivity" />
             <activity android:name=".DeviceListActivity" />
-          <meta-data android:name="yk_key" android:value="yk"/>
+          <meta-data android:name="yk_key" android:value="yk14876611858976"/>
           <!--yk_key需要向我公司申请 格式为：ykxxxxxx  -->
      </application>
 

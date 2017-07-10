@@ -1,5 +1,7 @@
 package com.ykan.sdk.example;
 
+import java.util.ArrayList;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;

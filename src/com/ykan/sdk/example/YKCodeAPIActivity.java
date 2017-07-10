@@ -1,11 +1,7 @@
 package com.ykan.sdk.example;
-
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONException;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,7 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.gizwits.gizwifisdk.api.GizWifiDevice;
 import com.yaokan.sdk.api.JsonParser;
 import com.yaokan.sdk.api.YkanSDKManager;
@@ -35,8 +30,6 @@ import com.yaokan.sdk.model.RemoteControl;
 import com.yaokan.sdk.utils.Logger;
 import com.yaokan.sdk.utils.ProgressDialogUtils;
 import com.yaokan.sdk.utils.Utility;
-import com.yaokan.sdk.wifi.DeviceManager;
-
 public class YKCodeAPIActivity extends Activity implements View.OnClickListener {
 	
 	private ProgressDialogUtils dialogUtils ;
@@ -47,9 +40,6 @@ public class YKCodeAPIActivity extends Activity implements View.OnClickListener 
 	
 	private TextView showText,tvDevice ;
 	
-//	private  Spinner devicesSpinner;
-	
-//	List<GizWifiDevice> wifiDevices;
 	
 	private GizWifiDevice currGizWifiDevice;
 	
@@ -77,21 +67,17 @@ public class YKCodeAPIActivity extends Activity implements View.OnClickListener 
 	
 	private Spinner spType ,spBrands , spRemotes; 
 	
-	private ArrayAdapter<String> typeAdapter,brandAdapter,remoteAdapter, adapter;
+	private ArrayAdapter<String> typeAdapter,brandAdapter,remoteAdapter;
 	
-	private List<String> deviceNames;
 	
-	private DeviceManager mDeviceManager ;
-	
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.act_codeapi);
-//		devicesSpinner = (Spinner) findViewById(R.id.devices);
 		//遥控云数据接口分装对象对象
 	    ykanInterface = new YkanIRInterfaceImpl(getApplicationContext());	
-	    mDeviceManager =DeviceManager.instanceDeviceManager(getApplicationContext());
 	    initView();
 	    initDevice();
 	}
@@ -159,57 +145,15 @@ public class YKCodeAPIActivity extends Activity implements View.OnClickListener 
 		});
 	}
 	
-//	private String getBindInfo(boolean isBind){
-//		String strReturn = "";
-//		if( isBind==true ) strReturn = "已绑定";
-//		else strReturn = "未绑定";
-//		return strReturn;
-//	}
+
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-//		wifiDevices =mDeviceManager.getCanUseGizWifiDevice();
-//		deviceNames = new ArrayList<String>();
-//		for(int i = 0 ; i < wifiDevices.size() ;i++){
-//			deviceNames.add( wifiDevices.get(i).getProductName() + "(" + wifiDevices.get(i).getMacAddress() + ") " + getBindInfo( wifiDevices.get(i).isBind() ) );
-//		}
-//		
-//		adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, deviceNames);
-//		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//		//绑定 Adapter到控件
-//		devicesSpinner .setAdapter(adapter);
-//		devicesSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-//		    @Override
-//		    public void onItemSelected(AdapterView<?> parent, View view, 
-//		            int pos, long id) {
-//		    	setWifiDevices(pos);
-//		    }
-//		    @Override
-//		    public void onNothingSelected(AdapterView<?> parent) {
-//		    }
-//		});
-		//初始化为第一个设备
-//		setWifiDevices(0);
+
 	}
 	
-//	/**
-//	 * 设置当前数据
-//	 * @param pos
-//	 */
-//	private void setWifiDevices(int pos){
-//		if(!Utility.isEmpty(wifiDevices)){
-//			deviceId = wifiDevices.get(pos).getDid();
-//	    	currGizWifiDevice = wifiDevices.get(pos);
-//	    	
-//	    	//在下载数据之前需要设置设备ID，用哪个设备去下载
-//	    	YkanSDKManager.getInstance().setDeviceId(deviceId);
-//	    	if( currGizWifiDevice.isSubscribed() == false ){
-//	    		currGizWifiDevice.setSubscribe(true);
-//	    	}
-//		}
-//	}
-	
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -220,7 +164,14 @@ public class YKCodeAPIActivity extends Activity implements View.OnClickListener 
 				Toast.makeText(getApplicationContext(), "没有下载遥控器数据", Toast.LENGTH_SHORT).show();
 				return;
 			}
-			Intent intent = new Intent(this,YKWifiDeviceControlActivity.class);
+			Intent intent = new Intent();
+			int airTid=7;//空调
+			if (remoteControl.gettId()==airTid) {
+				intent.setClass(this,AirControlActivity.class);			
+			}else {
+				intent.setClass(this,YKWifiDeviceControlActivity.class);
+			}
+			
 			intent.putExtra("GizWifiDevice", currGizWifiDevice);
 			JsonParser jsonParser = new JsonParser();
 			try {

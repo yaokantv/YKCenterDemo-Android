@@ -1,14 +1,10 @@
 package com.ykan.sdk.example;
-
-import java.util.ArrayList;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.gizwits.gizwifisdk.enumration.GizUserAccountType;
 import com.gizwits.gizwifisdk.enumration.GizWifiErrorCode;
 import com.yaokan.sdk.api.YkanSDKManager;

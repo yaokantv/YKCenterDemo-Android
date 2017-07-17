@@ -158,6 +158,28 @@ public class YKCodeAPIActivity extends Activity implements View.OnClickListener 
 		super.onResume();
 
 	}
+	
+	private void toYKWifiDeviceControlActivity(Intent intent,JsonParser jsonParser){
+		intent.setClass(this, YKWifiDeviceControlActivity.class);
+		intent.putExtra("GizWifiDevice", currGizWifiDevice);
+		try {
+			intent.putExtra("rcCommand",jsonParser.toJson(remoteControl.getRcCommand()));
+		} catch (JSONException e) {
+			Log.e(TAG, "JSONException:" +e.getMessage());
+		}
+		startActivity(intent);
+	}
+	
+	private void toAirControlActivity(Intent intent,JsonParser jsonParser){
+		intent.setClass(this, AirControlActivity.class);
+		intent.putExtra("GizWifiDevice", currGizWifiDevice);
+		try {
+			intent.putExtra("remoteControl",jsonParser.toJson(remoteControl));
+		} catch (JSONException e) {
+			Log.e(TAG, "JSONException:" +e.getMessage());
+		}
+		startActivity(intent);
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -171,21 +193,14 @@ public class YKCodeAPIActivity extends Activity implements View.OnClickListener 
 				return;
 			}
 			Intent intent = new Intent();
+			JsonParser jsonParser = new JsonParser();
 			int airTid = 7;// 空调
 			if (remoteControl.gettId() == airTid) {
-				intent.setClass(this, AirControlActivity.class);
+				toAirControlActivity(intent, jsonParser);
 			} else {
-				intent.setClass(this, YKWifiDeviceControlActivity.class);
+				toYKWifiDeviceControlActivity(intent, jsonParser);
 			}
-			intent.putExtra("GizWifiDevice", currGizWifiDevice);
-			JsonParser jsonParser = new JsonParser();
-			try {
-				intent.putExtra("rcCommand",
-						jsonParser.toJson(remoteControl.getRcCommand()));
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			startActivity(intent);
+		  
 			break;
 		default:
 			new DownloadThread(v.getId()).start();
